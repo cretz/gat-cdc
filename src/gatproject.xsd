@@ -1,0 +1,450 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" 
+        targetNamespace="http://www.gatcdc.org/schema/project/1.0"
+        xmlns:tns="http://www.gatcdc.org/schema/project/1.0"
+        elementFormDefault="qualified">
+
+    <complexType name="project">
+        <sequence>
+            <element name="conditional" type="tns:conditional" minOccurs="0" maxOccurs="unbounded">
+                <annotation>
+                    <documentation>
+                        This is the collection of conditionals for this project.
+                    </documentation>
+                </annotation>
+            </element>
+        </sequence>
+        <attribute name="name" type="string" use="required">
+            <annotation>
+                <documentation>
+                    This is the name off the project. It is required and
+                    must be unique within the database instance.
+                </documentation>
+            </annotation>
+        </attribute>
+    </complexType>
+
+    <complexType name="conditional">
+        <annotation>
+            <documentation>
+                This defines a conditional. Conditionals check the "when" statement and, if applicable,
+                apply the actions present in the "then" statement.
+            </documentation>
+        </annotation>
+        <sequence>
+            <element name="when" type="tns:conditionalContainer" minOccurs="0">
+                <annotation>
+                    <documentation>
+                        This contains the conditionals that must be satisfied before the
+                        actions contained within the "then" section. If this is not
+                        present, every item in the database will have the actions executed.
+                    </documentation>
+                </annotation>
+            </element>
+            <element name="then" type="tns:then" />
+        </sequence>
+        <attribute name="name" type="string">
+            <annotation>
+                <documentation>
+                    This is the name of this conditional. It must be unique
+                    throughout the project. If this is not provided, the
+                    name will be "Conditional#" where # is the number of the
+                    conditional, starting at 1, as it is ordered in this project.                
+                </documentation>
+            </annotation>
+        </attribute>
+        <attribute name="applyToNewSchema" type="boolean" default="false">
+            <annotation>
+                <documentation>
+                    If true, this conditional will also be applied to any new schema elements that appear
+                    in the database this project is applied to. The default is false.
+                </documentation>
+            </annotation>
+        </attribute>
+    </complexType>
+
+    <!-- Conditional -->
+
+    <complexType name="conditionalContainer">
+        <annotation>
+            <documentation>
+                Container for conditional statements. This can contain an unlimited number of 
+                inner conditionals.
+            </documentation>
+        </annotation>
+        <choice maxOccurs="unbounded">
+            <element name="any" type="tns:conditionalContainer" minOccurs="0">
+                <annotation>
+                    <documentation>
+                        Container for conditional statements. Is only true if any of
+                        the conditionals within are true.
+                    </documentation>
+                </annotation>
+            </element>
+            <element name="none" type="tns:conditionalContainer" minOccurs="0">
+                <annotation>
+                    <documentation>
+                        Container for conditional statements. Is only true if all conditionals
+                        within are false.
+                    </documentation>
+                </annotation>
+            </element>
+            <element name="all" type="tns:conditionalContainer" minOccurs="0">
+                <annotation>
+                    <documentation>
+                        Container for conditional statements. Is only true if all conditionals
+                        within are true.
+                    </documentation>
+                </annotation>
+            </element>
+            <element name="actionEquals" type="tns:actionEquals" minOccurs="0">
+                <annotation>
+                    <documentation>
+                        This limits the conditional to a certain action. If it is
+                        not present, all actions will be accepted.
+                    </documentation>
+                </annotation>
+            </element>
+            <element name="schemaEquals" type="tns:valueEquals" minOccurs="0">
+                <annotation>
+                    <documentation>
+                        This limits the conditional to a certain schema. If it is
+                        not present, all schemas will be accepted.
+                    </documentation>
+                </annotation>
+            </element>
+            <element name="tableEquals" type="tns:valueEquals" minOccurs="0">
+                <annotation>
+                    <documentation>
+                        This limits the conditional to a certain table. If it is
+                        not present, all tables will be accepted.
+                    </documentation>
+                </annotation>
+            </element>
+            <element name="columnEquals" type="tns:valueEquals" minOccurs="0">
+                <annotation>
+                    <documentation>
+                        This limits the conditional to a certain column. If it is
+                        not present, all columns will be accepted.
+                    </documentation>
+                </annotation>
+            </element>
+        </choice>
+    </complexType>
+
+    <complexType name="actionEquals">
+        <annotation>
+            <documentation>
+                This is a conditional that is true if the given action is the current action.
+            </documentation>
+        </annotation>
+        <attribute name="action" type="tns:action" use="required">
+            <annotation>
+                <documentation>
+                    The action to test.
+                </documentation>
+            </annotation>
+        </attribute>
+    </complexType>
+
+    <simpleType name="action">
+        <annotation>
+            <documentation>
+                This is the action that has occurred within a particular event.
+            </documentation>
+        </annotation>
+        <restriction base="string">
+            <enumeration value="INSERT" />
+            <enumeration value="UPDATE" />
+            <enumeration value="DELETE" />
+            <enumeration value="CREATE" />
+            <enumeration value="ALTER" />
+            <enumeration value="DROP" />
+        </restriction>
+    </simpleType>
+    
+    <complexType name="valueEquals">
+        <attribute name="value" type="string" use="required">
+            <annotation>
+                <documentation>
+                    This is a conditional that is true if the given value is the current value.
+                </documentation>
+            </annotation>
+        </attribute>
+        <attribute name="regex" type="boolean" default="false">
+            <annotation>
+                <documentation>
+                    If true, the given value will be evaluated using regular expressions. This
+                    is false by default.
+                </documentation>
+            </annotation>
+        </attribute>
+    </complexType>
+    
+    <!-- Action -->
+
+    <complexType name="then">
+        <annotation>
+            <documentation>
+                Set of actions to be executed when conditionals are satisfied. 
+            </documentation>
+        </annotation>
+        <choice maxOccurs="unbounded">
+            <element name="thriftSend" type="tns:hostAction" minOccurs="0">
+                <annotation>
+                    <documentation>
+                        Sends an event to a Thrift RPC service.
+                    </documentation>
+                </annotation>
+            </element>
+            <element name="protoSend" type="tns:hostAction" minOccurs="0">
+                <annotation>
+                    <documentation>
+                        Sends an event to a Protocol Buffers RPC service
+                    </documentation>
+                </annotation>
+            </element>
+            <element name="jsonHttpPost" type="tns:urlAction" minOccurs="0">
+                <annotation>
+                    <documentation>
+                        Posts a JSON event to an HTTP server.
+                    </documentation>
+                </annotation>
+            </element>
+            <element name="xmlHttpPost" type="tns:urlAction" minOccurs="0">
+                <annotation>
+                    <documentation>
+                        Posts an XML event to an HTTP server.
+                    </documentation>
+                </annotation>
+            </element>
+            <element name="socketSend" type="tns:socketAction" minOccurs="0">
+                <annotation>
+                    <documentation>
+                        Sends a formatted event via TCP to a socket.
+                    </documentation>
+                </annotation>
+            </element>
+            <element name="amqpSend" type="tns:asyncOnlySocketAction" minOccurs="0">
+                <annotation>
+                    <documentation>
+                        Sends a formatted event via AMQP.
+                    </documentation>
+                </annotation>
+            </element>
+            <element name="zeromqSend" type="tns:asyncOnlySocketAction" minOccurs="0">
+                <annotation>
+                    <documentation>
+                        Sends a formatted event via ØMQ.
+                    </documentation>
+                </annotation>
+            </element>
+            <element name="nativeMethod" type="tns:nativeMethodAction" minOccurs="0">
+                <annotation>
+                    <documentation>
+                        Calls a static method in the native language of the implementation.
+                        Different vendors use different native languages.
+                    </documentation>
+                </annotation>
+            </element>
+            <element name="nativeCode" type="tns:nativeCodeAction" minOccurs="0">
+                <annotation>
+                    <documentation>
+                        Executes the given code in the native language of the implementation.
+                        Different vendors use different native languages.
+                    </documentation>
+                </annotation>
+            </element>
+        </choice>
+    </complexType>
+
+    <complexType name="externalAction">
+        <annotation>
+            <documentation>
+                Base action for all actions.
+            </documentation>
+        </annotation>
+        <attribute name="async" type="boolean" default="false">
+            <annotation>
+                <documentation>
+                    If true, the action will be executed asynchronously. When
+                    actions are executed asynchronously, many event responses
+                    will have no effect (e.g. rollback). The default is false.
+                </documentation>
+            </annotation>
+        </attribute>
+        <attribute name="rollbackOnFail" type="boolean" default="false">
+            <annotation>
+                <documentation>
+                    If true, this will rollback the execution on action failure.
+                    Some DDL events cannot be rolled back. If async is true,
+                    this will only rollback if the action could not be started;
+                    The response will not matter. The default is false.
+                </documentation>
+            </annotation>
+        </attribute>
+    </complexType>
+    
+    <complexType name="hostAction">
+        <annotation>
+            <documentation>
+                Base action for all actions that require a host and a port.
+            </documentation>
+        </annotation>
+        <complexContent>
+            <extension base="tns:externalAction">
+                <attribute name="host" type="string" use="required">
+                    <annotation>
+                        <documentation>
+                            The hostname or IP for the action.
+                        </documentation>
+                    </annotation>
+                </attribute>
+                <attribute name="port" type="int" use="required">
+                    <annotation>
+                        <documentation>
+                            The port for the action.
+                        </documentation>
+                    </annotation>
+                </attribute>
+            </extension>
+        </complexContent>
+    </complexType>
+    
+    <complexType name="socketAction">
+        <annotation>
+            <documentation>
+                Base action for all socket based actions.
+            </documentation>
+        </annotation>
+        <complexContent>
+            <extension base="tns:hostAction">
+                <attribute name="dataFormat" type="tns:dataFormat" use="required">
+                    <annotation>
+                        <documentation>
+                            The format of bytes to send over the socket.
+                        </documentation>
+                    </annotation>
+                </attribute>
+            </extension>
+        </complexContent>
+    </complexType>
+    
+    <simpleType name="dataFormat">
+        <annotation>
+            <documentation>
+                Format of data to send over a socket.
+            </documentation>
+        </annotation>
+        <restriction base="string">
+            <enumeration value="THIFT">
+                <annotation>
+                    <documentation>
+                        Thrift formatted bytes.
+                    </documentation>
+                </annotation>
+            </enumeration>
+            <enumeration value="PROTO">
+                <annotation>
+                    <documentation>
+                        Protocol Buffers formatted bytes.
+                    </documentation>
+                </annotation>
+            </enumeration>
+            <enumeration value="JSON">
+                <annotation>
+                    <documentation>
+                        JSON formatted UTF8 string in bytes.
+                    </documentation>
+                </annotation>
+            </enumeration>
+            <enumeration value="XML">
+                <annotation>
+                    <documentation>
+                        XML formatted UTF8 string in bytes.
+                    </documentation>
+                </annotation>
+            </enumeration>
+            <enumeration value="NATIVE_SERIALIZED">
+                <annotation>
+                    <documentation>
+                        Serialized event object in the native implementation
+                        language of the vendor.
+                    </documentation>
+                </annotation>
+            </enumeration>
+        </restriction>
+    </simpleType>
+
+    <complexType name="urlAction">
+        <annotation>
+            <documentation>
+                Base action for all URL based actions. 
+            </documentation>
+        </annotation>
+        <complexContent>
+            <extension base="tns:externalAction">
+                <attribute name="path" type="string" use="required">
+                    <annotation>
+                        <documentation>
+                            The full URL path. This should include the
+                            protocol (i.e. http or https).
+                        </documentation>
+                    </annotation>
+                </attribute>
+                <attribute name="username" type="string">
+                    <annotation>
+                        <documentation>
+                            Username if required for the URL.
+                        </documentation>
+                    </annotation>
+                </attribute>
+                <attribute name="password" type="string">
+                    <annotation>
+                        <documentation>
+                            Password if required for the URL.
+                        </documentation>
+                    </annotation>
+                </attribute>
+            </extension>
+        </complexContent>
+    </complexType>
+
+    <complexType name="asyncOnlySocketAction">
+        <annotation>
+            <documentation>
+                Base action for all socket actions that are asynchronous only.
+            </documentation>
+        </annotation>
+        <complexContent>
+            <extension base="tns:socketAction">
+                <attribute name="async" use="prohibited" />
+            </extension>
+        </complexContent>
+    </complexType>
+
+    <complexType name="nativeMethodAction">
+        <complexContent>
+            <extension base="tns:externalAction">
+                <sequence>
+                    <element name="library" type="string" minOccurs="0" maxOccurs="unbounded" />
+                </sequence>
+                <attribute name="class" type="string" />
+                <attribute name="method" type="string" />
+            </extension>
+        </complexContent>
+    </complexType>
+
+    <complexType name="nativeCodeAction">
+        <complexContent>
+            <extension base="tns:externalAction">
+                <sequence>
+                    <element name="library" type="string" minOccurs="0" maxOccurs="unbounded" />
+                    <element name="code" type="string" />
+                </sequence>
+                <attribute name="language" type="string" />
+            </extension>
+        </complexContent>
+    </complexType>
+
+</schema>
