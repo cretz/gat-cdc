@@ -1,10 +1,53 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual Studio 2008
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gat.Common", "Gat.Common\Gat.Common.csproj", "{D4355DE3-BCF0-415F-8D51-09B9C5689A4A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gat.SqlServer", "Gat.SqlServer\Gat.SqlServer.csproj", "{3F568EFB-50DC-4F3A-8492-39615C565A51}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gat.Event.Thrift", "Gat.Event.Thrift\Gat.Event.Thrift.csproj", "{73F6A1E5-BBD9-4141-A15D-8289534D5F4E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Thrift", "Thrift\Thrift.csproj", "{519449D6-6EBB-42FC-A302-D339FA445B3A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gat.Event.Proto", "Gat.Event.Proto\Gat.Event.Proto.csproj", "{651FB7A2-3C61-4B79-BA8E-9F516E7FD289}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Lib", "Lib", "{DD8FC605-B1B9-4228-95BA-CD3D1FF73463}"
+	ProjectSection(SolutionItems) = preProject
+		Lib\protobuf-net.dll = Lib\protobuf-net.dll
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gat.Event.Xml", "Gat.Event.Xml\Gat.Event.Xml.csproj", "{61D56E3B-8A0D-41A1-8B38-01508B900E83}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D4355DE3-BCF0-415F-8D51-09B9C5689A4A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D4355DE3-BCF0-415F-8D51-09B9C5689A4A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D4355DE3-BCF0-415F-8D51-09B9C5689A4A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D4355DE3-BCF0-415F-8D51-09B9C5689A4A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3F568EFB-50DC-4F3A-8492-39615C565A51}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3F568EFB-50DC-4F3A-8492-39615C565A51}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3F568EFB-50DC-4F3A-8492-39615C565A51}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3F568EFB-50DC-4F3A-8492-39615C565A51}.Release|Any CPU.Build.0 = Release|Any CPU
+		{73F6A1E5-BBD9-4141-A15D-8289534D5F4E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{73F6A1E5-BBD9-4141-A15D-8289534D5F4E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{73F6A1E5-BBD9-4141-A15D-8289534D5F4E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{73F6A1E5-BBD9-4141-A15D-8289534D5F4E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{519449D6-6EBB-42FC-A302-D339FA445B3A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{519449D6-6EBB-42FC-A302-D339FA445B3A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{519449D6-6EBB-42FC-A302-D339FA445B3A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{519449D6-6EBB-42FC-A302-D339FA445B3A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{651FB7A2-3C61-4B79-BA8E-9F516E7FD289}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{651FB7A2-3C61-4B79-BA8E-9F516E7FD289}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{651FB7A2-3C61-4B79-BA8E-9F516E7FD289}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{651FB7A2-3C61-4B79-BA8E-9F516E7FD289}.Release|Any CPU.Build.0 = Release|Any CPU
+		{61D56E3B-8A0D-41A1-8B38-01508B900E83}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{61D56E3B-8A0D-41A1-8B38-01508B900E83}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{61D56E3B-8A0D-41A1-8B38-01508B900E83}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{61D56E3B-8A0D-41A1-8B38-01508B900E83}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

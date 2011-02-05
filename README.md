@@ -47,6 +47,9 @@ Options:
   This cannot be used in conjunction with _-oracle-service-identifier_.
 * _-oracle-service-identifier, -osi SID_NAME_ - The SID for an Oracle database. This
   cannot be used in conjunction with _-oracle-service-name_.
+* _-strict, -s_ - If set, this will do more strict checking on validations, installations,
+  and updates. Currently, this will perform the following additional assertions:
+** Every conditional must have at least one applicable table
   
 Action:
 

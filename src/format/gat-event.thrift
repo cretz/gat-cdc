@@ -75,7 +75,7 @@ struct GatRow {
 
 struct GatRowSet {
 	1: required list<GatColumn> columns,
-	2: required list<GatRow> values
+	2: required list<GatRow> rows
 }
 
 struct GatEvent {
@@ -89,16 +89,19 @@ struct GatEvent {
 }
 
 struct GatEventResponse {
-	1: required bool roolback = 0,
+    //as much as I want this to have a default value of false, I am blocked by THRIFT-1026 
+	1: optional bool rollback,
 	2: optional string executeInstead,
 	3: optional GatRowSet returnInstead,
 	4: optional list<string> messages
 }
 
 exception GatRollbackException {
-	1: optional string message
+    //calling this "reason" so it doesn't cause ambiguity 
+    //  w/ other languages' (e.g. C#) message property.
+	1: optional string reason
 }
 
 service GatConsumer {
-	GatEventResponse onTrigger(1: GatEvent evt) throws(1: GatRollbackException err1)
+	GatEventResponse onEvent(1: GatEvent evt) throws(1: GatRollbackException err1)
 }

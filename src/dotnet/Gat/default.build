@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<project name="Gat">
+
+    <include buildfile="default.build.properties" />
+
+    <target name="gen-thrift">
+        <!-- exec -->
+        <exec program="${cygwin.path}\bin\bash.exe" workingdir="${cygwin.path}\bin">
+            <arg value="-c &quot;/usr/local/bin/thrift -o ${cygwin.gat.basedir}/src/dotnet/Gat/Gat.Event.Thrift -gen csharp ${cygwin.gat.basedir}/src/format/gat-event.thrift&quot;" />
+        </exec>
+        <!-- copy over -->
+        <copy todir="Gat.Event.Thrift">
+            <fileset basedir="Gat.Event.Thrift\gen-csharp\Gat\Event\Thrift">
+                <include name="**/*" />
+            </fileset>
+        </copy>
+        <!-- delete gen-csharp -->
+        <delete dir="Gat.Event.Thrift\gen-csharp" includeemptydirs="true" />
+    </target>
+    
+    <target name="gen-proto">
+        <!-- exec -->
+        <exec program="${protogen.exe}" workingdir="..\..\">
+            <arg line="-i:format\gat-event.proto -o:dotnet\Gat\Gat.Event.Proto\GatConsumer.cs -ns:Gat.Event.Proto -p:protoRpc -d" />
+        </exec>
+    </target>
+    
+    <target name="gen-xml">
+        <!-- exec -->
+        <exec program="${xsd.exe}">
+            <arg line="../../format/gat-event.xsd /c /n:Gat.Event.Xml /o:Gat.Event.Xml" />
+        </exec>
+    </target>
+    
+    <target name="gen-project-model">
+        <!-- delete prev -->
+        <delete dir="Gat.Common/Project/Model" includeemptydirs="true" />
+        <mkdir dir="Gat.Common/Project/Model" />
+        <!-- exec -->
+        <exec program="${xsd.exe}">
+            <arg line="../../gat-project.xsd /c /n:Gat.Common.Project.Model /o:Gat.Common/Project/Model" />
+        </exec>
+    </target>
+</project>

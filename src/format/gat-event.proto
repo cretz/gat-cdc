@@ -1,0 +1,96 @@
+option java_package = "org.gatcdc.event.proto";
+
+enum GatEventType {
+    INSERT = 0;
+    UPDATE = 1;
+    DELETE = 2;
+    CREATE = 3;
+    ALTER = 4;
+    DROP = 5;
+}
+
+enum GatDataType {
+    ARRAY = 0;
+    BIGINT = 1;
+    BINARY = 2;
+    BIT = 3;
+    BLOB = 4;
+    BOOLEAN = 5;
+    CHAR = 6;
+    CLOB = 7;
+    DATALINK = 8;
+    DATE = 9;
+    DECIMAL = 10;
+    DISTINCT = 11;
+    DOUBLE = 12;
+    FLOAT = 13;
+    INTEGER = 14;
+    LONGNVARCHAR = 15;
+    LONGVARBINARY = 16;
+    LONGVARCHAR = 17;
+    NCHAR = 18;
+    NCLOB = 19;
+    NULL = 20;
+    NUMERIC = 21;
+    NVARCHAR = 22;
+    OTHER = 23;
+    REAL = 24;
+    REF = 25;
+    ROWID = 26;
+    SMALLINT = 27;
+    SQLXML = 28;
+    STRUCT = 29;
+    TIME = 30;
+    TIMESTAMP = 31;
+    TINYINT = 32;
+    VARBINARY = 33;
+    VARCHAR = 34;
+}
+
+message GatColumnType {
+    required GatDataType type = 1;
+    required string typeName = 2;
+    optional int32 precision = 3;
+    optional int32 scale = 4;
+}
+
+message GatColumn {
+    required int32 ordinal = 1;
+    required string name = 2;
+    required GatColumnType type = 3;
+}
+
+message GatValue {
+    required int32 ordinal = 1;
+    optional bytes value = 2;
+}
+
+message GatRow {
+    repeated GatValue values = 1;
+}
+
+message GatRowSet {
+    repeated GatColumn columns = 1;
+    repeated GatRow rows = 2;
+}
+
+message GatEvent {
+    required string id = 1;
+    required GatEventType type = 2;
+    optional string catalog = 3;
+    optional string schema = 4;
+    optional string table = 5;
+    optional string sql = 6;
+    optional GatRowSet rowSet = 7;
+}
+
+message GatEventResponse {
+    optional bool rollback = 1;
+    optional string executeInstead = 2;
+    optional GatRowSet returnInstead = 3;
+    repeated string messages = 4;
+}
+
+service GatConsumer {
+    rpc onEvent (GatEvent) returns (GatEventResponse);
+}

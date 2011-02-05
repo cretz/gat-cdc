@@ -3,6 +3,8 @@
         targetNamespace="http://www.gatcdc.org/schema/project/1.0"
         xmlns:tns="http://www.gatcdc.org/schema/project/1.0"
         elementFormDefault="qualified">
+        
+    <element name="project" type="tns:project" />
 
     <complexType name="project">
         <sequence>
@@ -157,9 +159,27 @@
             <enumeration value="INSERT" />
             <enumeration value="UPDATE" />
             <enumeration value="DELETE" />
-            <enumeration value="CREATE" />
-            <enumeration value="ALTER" />
-            <enumeration value="DROP" />
+            <enumeration value="CREATE">
+                <annotation>
+                    <documentation>
+                        ALTER statements occur when a table has been created.
+                    </documentation>
+                </annotation>
+            </enumeration>
+            <enumeration value="ALTER">
+                <annotation>
+                    <documentation>
+                        ALTER statements occur when a table has been altered.
+                    </documentation>
+                </annotation>
+            </enumeration>
+            <enumeration value="DROP">
+                <annotation>
+                    <documentation>
+                        ALTER statements occur when a table has been dropped.
+                    </documentation>
+                </annotation>
+            </enumeration>
         </restriction>
     </simpleType>
     
@@ -280,6 +300,22 @@
                     Some DDL events cannot be rolled back. If async is true,
                     this will only rollback if the action could not be started;
                     The response will not matter. The default is false.
+                </documentation>
+            </annotation>
+        </attribute>
+        <attribute name="includeOriginalSql" type="boolean" default="false">
+            <annotation>
+                <documentation>
+                    If true, the original SQL will be sent as part of the event.
+                    The default is false.
+                </documentation>
+            </annotation>
+        </attribute>
+        <attribute name="includeRowSet" type="boolean" default="false">
+            <annotation>
+                <documentation>
+                    If true, the affected rows will be sent as part of the event.
+                    The default is false.
                 </documentation>
             </annotation>
         </attribute>

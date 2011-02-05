@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" 
+        targetNamespace="http://www.gatcdc.org/schema/project/1.0"
+        xmlns:tns="http://www.gatcdc.org/schema/project/1.0"
+        elementFormDefault="qualified">
+        
+    <element name="gatEvent" type="tns:gatEvent" />
+    <element name="gatEventResponse" type="tns:gatEventResponse" />
+        
+    <simpleType name="gatEventType">
+        <restriction base="string">
+            <enumeration value="INSERT" />
+            <enumeration value="UPDATE" />
+            <enumeration value="DELETE" />
+            <enumeration value="CREATE" />
+            <enumeration value="ALTER" />
+            <enumeration value="DROP" />
+        </restriction>
+    </simpleType>
+        
+    <simpleType name="gatDataType">
+        <restriction base="string">
+            <enumeration value="ARRAY" />
+            <enumeration value="BIGINT" />
+            <enumeration value="BINARY" />
+            <enumeration value="BIT" />
+            <enumeration value="BLOB" />
+            <enumeration value="BOOLEAN" />
+            <enumeration value="CHAR" />
+            <enumeration value="CLOB" />
+            <enumeration value="DATALINK" />
+            <enumeration value="DATE" />
+            <enumeration value="DECIMAL" />
+            <enumeration value="DISTINCT" />
+            <enumeration value="DOUBLE" />
+            <enumeration value="FLOAT" />
+            <enumeration value="INTEGER" />
+            <enumeration value="LONGNVARCHAR" />
+            <enumeration value="LONGVARBINARY" />
+            <enumeration value="LONGVARCHAR" />
+            <enumeration value="NCHAR" />
+            <enumeration value="NCLOB" />
+            <enumeration value="NULL" />
+            <enumeration value="NUMERIC" />
+            <enumeration value="NVARCHAR" />
+            <enumeration value="OTHER" />
+            <enumeration value="REAL" />
+            <enumeration value="REF" />
+            <enumeration value="ROWID" />
+            <enumeration value="SMALLINT" />
+            <enumeration value="SQLXML" />
+            <enumeration value="STRUCT" />
+            <enumeration value="TIME" />
+            <enumeration value="TIMESTAMP" />
+            <enumeration value="TINYINT" />
+            <enumeration value="VARBINARY" />
+            <enumeration value="VARCHAR" />
+        </restriction>
+    </simpleType>
+    
+    <complexType name="gatColumnType">
+        <attribute name="type" type="tns:gatDataType" use="required" />
+        <attribute name="typeName" type="string" use="required" />
+        <attribute name="precision" type="int" />
+        <attribute name="scale" type="int" />
+    </complexType>
+    
+    <complexType name="gatColumn">
+        <sequence>
+            <element name="type" type="tns:gatColumnType" />
+        </sequence>
+        <attribute name="ordinal" type="int" use="required" />
+        <attribute name="name" type="string" use="required" />
+    </complexType>
+    
+    <complexType name="gatValue">
+        <attribute name="ordinal" type="int" use="required" />
+        <attribute name="value" type="base64Binary" />
+    </complexType>
+    
+    <complexType name="gatRow">
+        <sequence>
+            <element name="value" type="tns:gatValue" maxOccurs="unbounded" />
+        </sequence>
+    </complexType>
+    
+    <complexType name="gatRowSet">
+        <sequence>
+            <element name="column" type="tns:gatColumn" maxOccurs="unbounded" />
+            <element name="row" type="tns:gatRow" maxOccurs="unbounded" />
+        </sequence>
+    </complexType>
+    
+    <complexType name="gatEvent">
+        <sequence>
+            <element name="rowSet" type="tns:gatRowSet" minOccurs="0" />
+        </sequence>
+        <attribute name="id" type="string" use="required" />
+        <attribute name="type" type="tns:gatEventType" use="required" />
+        <attribute name="catalog" type="string" />
+        <attribute name="schema" type="string" />
+        <attribute name="table" type="string" />
+        <attribute name="sql" type="string" />
+    </complexType>
+    
+    <complexType name="gatEventResponse">
+        <sequence>
+            <element name="returnInstead" type="tns:gatRowSet" minOccurs="0" />
+            <element name="message" type="string" minOccurs="0" maxOccurs="unbounded" />
+        </sequence>
+        <attribute name="rollback" type="boolean" />
+        <attribute name="executeInstead" type="string" />
+    </complexType>
+</schema>

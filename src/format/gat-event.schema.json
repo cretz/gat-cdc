@@ -1,0 +1,39 @@
+TODO: finish this mess
+
+{
+    //GatEvent
+    description : "Gat event JSON representation",
+    type : "object",
+    properties : {
+        id : { type : "string" },
+        type : {
+            //GatEventType
+            type : "string",
+            enum : [
+                "INSERT",
+                "UPDATE",
+                "DELETE",
+                "CREATE",
+                "ALTER",
+                "DROP"
+            ]
+        },
+        catalog : { type : "string", optional : true },
+        schema : { type : "string", optional : true },
+        table : { type : "string", optional : true },
+        sql : { type : "string", optional : true },
+        rowSet : {
+            //GatRowSet
+            type : "object",
+            optional : true,
+            properties : {
+                columns : {
+                    type : "array",
+                    items : {
+                        //GatColumn
+                        type : "object",
+                        properties : 
+            }
+        }
+    }
+}
